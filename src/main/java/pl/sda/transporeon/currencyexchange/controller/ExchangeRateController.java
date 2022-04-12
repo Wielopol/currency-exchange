@@ -27,7 +27,7 @@ public class ExchangeRateController {
 
     @PostMapping("/exchange")
     ResponseEntity<ExchangeRate> createTask(@RequestBody ExchangeRate toCreate){
-        ExchangeRate result = exchangeRateService.save(toCreate);
+        ExchangeRate result = repository.save(toCreate);
         return ResponseEntity.created(URI.create("/"+ result.getId())).body(result);
     }
 
