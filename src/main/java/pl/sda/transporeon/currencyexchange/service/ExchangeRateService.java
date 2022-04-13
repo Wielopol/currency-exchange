@@ -2,27 +2,26 @@ package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
-import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
-
-import java.sql.Date;
 
 @Service
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
-    private final ExchangeRateApi exchangeRateApi;
-//    private final MapToDTO mapToDTO;
+    private final ApiServiceNonPln apiServiceNonPln;
+    private final ApiServicePln apiServicePln;
 
     @Autowired
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository, ApiServiceNonPln apiServiceNonPln, ApiServicePln apiServicePln) {
     public ExchangeRateService(ExchangeRateRepository exchangeRateRepository,
                                ExchangeRateApi exchangeRateApi) {
         this.exchangeRateRepository = exchangeRateRepository;
+        this.apiServiceNonPln = apiServiceNonPln;
+        this.apiServicePln = apiServicePln;
         this.exchangeRateApi = exchangeRateApi;
 //        this.mapToDTO = mapToDTO;
     }
-    
+
     public ExchangeRate getExchangeDataToView(String base,
                                                  String target,
                                                  double casch,
