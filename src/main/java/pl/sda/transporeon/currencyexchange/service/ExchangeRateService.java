@@ -6,6 +6,10 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ExchangeRateService {
 
@@ -42,9 +46,10 @@ public class ExchangeRateService {
         return rateDTO;
     }
 
+    public void remove(){
 
+        exchangeRateRepository.deleteAll(exchangeRateRepository.findAll());
 
-
-
+    }
 
 }
