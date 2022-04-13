@@ -26,16 +26,29 @@ public class ExchangeRateController {
     }
 
     @PostMapping("/exchange")
-    ResponseEntity<ExchangeRate> createTask(@RequestBody ExchangeRate toCreate){
-        ExchangeRate result = repository.save(toCreate);
+    ResponseEntity<ExchangeRate> createRate(@RequestBody ExchangeRate toCreate){
+        ExchangeRate result = exchangeRateService.getExchangeDataToView(toCreate.getBaseCurrency(),
+                toCreate.getTargetCurrency(), toCreate.getRate(), toCreate.getExchangeDate());
         return ResponseEntity.created(URI.create("/"+ result.getId())).body(result);
     }
 
+    //    @GetMapping("/exchange/{base}/{target}/{date}")
+//    ResponseEntity<ExchangeRate> createRateUrl(
+//            @PathVariable String base,
+//            @PathVariable String target,
+//            @PathVariable String date) {
+//
+//        ExchangeRate result = exchangeRateService.getExchangeDataToView(base, target, date);
+//        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+//    }
 
     @GetMapping("/exchange")
     ResponseEntity<Iterable<ExchangeRate>> readAll(){
         return ResponseEntity.ok(repository.findAll());
     }
+
+
+
 
 
 }
