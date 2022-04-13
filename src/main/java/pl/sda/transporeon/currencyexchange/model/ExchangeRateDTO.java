@@ -12,7 +12,6 @@ import java.sql.Date;
 @Data
 public class ExchangeRateDTO {
 
-    private int id;
     private String baseCurrency;
     private String targetCurrency;
     private double rate;

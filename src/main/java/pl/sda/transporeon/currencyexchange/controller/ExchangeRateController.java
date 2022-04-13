@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
+import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 import pl.sda.transporeon.currencyexchange.service.ExchangeRateService;
 
@@ -25,22 +26,21 @@ public class ExchangeRateController {
         this.repository = repository;
     }
 
-    @PostMapping("/exchange")
-    ResponseEntity<ExchangeRate> createRate(@RequestBody ExchangeRate toCreate){
-        ExchangeRate result = exchangeRateService.getExchangeDataToView(toCreate.getBaseCurrency(),
-                toCreate.getTargetCurrency(), toCreate.getRate(), toCreate.getExchangeDate());
-        return ResponseEntity.created(URI.create("/"+ result.getId())).body(result);
-    }
-
-    //    @GetMapping("/exchange/{base}/{target}/{date}")
-//    ResponseEntity<ExchangeRate> createRateUrl(
-//            @PathVariable String base,
-//            @PathVariable String target,
-//            @PathVariable String date) {
-//
-//        ExchangeRate result = exchangeRateService.getExchangeDataToView(base, target, date);
-//        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+//    @PostMapping("/exchange")
+//    ResponseEntity<ExchangeRateDTO> createRate(@RequestBody ExchangeRate toCreate){
+//        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(),toCreate.getExchangeDate());
+//        return ResponseEntity.created(URI.create("/"+ result.getBaseCurrency())).body(result);
 //    }
+
+        @GetMapping("/exchange/{base}/{target}/{date}")
+    ResponseEntity<ExchangeRateDTO> createRateUrl(
+            @PathVariable String base,
+            @PathVariable String target,
+            @PathVariable String date) {
+
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base, target, date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
 
     @GetMapping("/exchange")
     ResponseEntity<Iterable<ExchangeRate>> readAll(){
