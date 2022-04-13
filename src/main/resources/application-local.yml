@@ -1,0 +1,15 @@
+#server.port=8080
+
+
+spring:
+  h2.console:
+    enabled: true
+    path: '/console'
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/exchange2'
+    username: 'kamil'
+    password: 'kamil'
+  jpa:
+    hibernate:
+      ddl-auto: update
+
