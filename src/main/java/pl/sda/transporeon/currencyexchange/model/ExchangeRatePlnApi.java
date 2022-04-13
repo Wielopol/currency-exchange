@@ -1,17 +1,14 @@
 package pl.sda.transporeon.currencyexchange.model;
 
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
-public class ExchangeRateApi {
+public class ExchangeRatePlnApi {
     private String code;
     private Rates[] rates;
 
     @Getter
-    @ToString
-    private class Rates {
+    public static class Rates {
         private String effectiveDate;
         private double mid;
     }

@@ -8,9 +8,13 @@ import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
+    private final ApiServiceNonPln apiServiceNonPln;
+    private final ApiServicePln apiServicePln;
 
     @Autowired
-    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository) {
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository, ApiServiceNonPln apiServiceNonPln, ApiServicePln apiServicePln) {
         this.exchangeRateRepository = exchangeRateRepository;
+        this.apiServiceNonPln = apiServiceNonPln;
+        this.apiServicePln = apiServicePln;
     }
 }
