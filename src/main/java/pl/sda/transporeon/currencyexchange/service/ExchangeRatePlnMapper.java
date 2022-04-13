@@ -14,11 +14,11 @@ public class ExchangeRatePlnMapper {
         Date exchangeDate = null;
         try {
             java.util.Date dt = new SimpleDateFormat("yyyy-MM-dd")
-                    .parse(rate.getRates()[0].getEffectiveDate());
+                    .parse(rate.getData());
             exchangeDate = new java.sql.Date(dt.getTime());
         } catch (ParseException e) {
             System.err.println(e);
         }
-        return new ExchangeRate(null, "PLN", rate.getCode(), rate.getRates()[0].getMid(), exchangeDate);
+        return new ExchangeRate(null, "PLN", "XAU", rate.getCena(), exchangeDate);
     }
 }

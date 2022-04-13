@@ -40,6 +40,14 @@ public class ExchangeRateController {
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
+    @GetMapping("/exchange/gold/{date}")
+    ResponseEntity<ExchangeRateDTO> createGoldUrl(
+            @PathVariable String date) {
+
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView("gold", "PLN", date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
+
     @GetMapping("/exchange")
     ResponseEntity<Iterable<ExchangeRate>> readAll() {
         return ResponseEntity.ok(repository.findAll());

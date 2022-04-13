@@ -6,20 +6,16 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
     private final ApiServiceNonPln apiServiceNonPln;
-    private final ApiServicePln apiServicePln;
+    private final ApiServiceGold apiServicePln;
     private  final MapToDTO mapToDTO;
 
     @Autowired
-    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository, ApiServiceNonPln apiServiceNonPln, ApiServicePln apiServicePln, MapToDTO mapToDTO) {
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository, ApiServiceNonPln apiServiceNonPln, ApiServiceGold apiServicePln, MapToDTO mapToDTO) {
         this.exchangeRateRepository = exchangeRateRepository;
         this.apiServiceNonPln = apiServiceNonPln;
         this.apiServicePln = apiServicePln;
@@ -30,18 +26,14 @@ public class ExchangeRateService {
     public ExchangeRateDTO getExchangeDataToView(String base,
                                                  String target,
                                                  String date){
-        ExchangeRate rate = new ExchangeRate();
-        //pobieranie walut z api TODO
-        if(base.equals("PLN")){
+        ExchangeRate rate;
+        if(base.equals("gold")){
              rate = apiServicePln.getRate(base, target, date);
         }else {
              rate = apiServiceNonPln.getRate(base, target, date);
         }
-        //zapis do DB
         exchangeRateRepository.save(rate);
-        // mapowanie model do dto
         ExchangeRateDTO rateDTO = mapToDTO.mapToDto(rate);
-        //return Dto
 
         return rateDTO;
     }

@@ -7,18 +7,18 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRatePlnApi;
 
 @Service
-public class ApiServicePln implements ApiService {
+public class ApiServiceGold implements ApiService {
 
     private final ExchangeRatePlnMapper plnMapper;
 
     @Autowired
-    public ApiServicePln(ExchangeRatePlnMapper plnMapper) {
+    public ApiServiceGold(ExchangeRatePlnMapper plnMapper) {
         this.plnMapper = plnMapper;
     }
 
     @Override
     public ExchangeRate getRate(String base, String target, String date) {
-        String request = "http://api.nbp.pl/api/exchangerates/rates/a/" + target + "/" + date + "/";
+        String request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
         RestTemplate restTemplate = new RestTemplate();
         ExchangeRatePlnApi rate = restTemplate.getForObject(request, ExchangeRatePlnApi.class);
 
