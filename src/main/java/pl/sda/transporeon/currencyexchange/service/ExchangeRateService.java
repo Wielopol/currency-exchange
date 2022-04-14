@@ -37,7 +37,7 @@ public class ExchangeRateService {
                 if (rawRates != null) {
                     rate = mapper.mapGold(rawRates[0]);
                 }
-            }else {
+            } else {
                 String request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
                 ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
                 if (rawRate != null) {
@@ -50,15 +50,11 @@ public class ExchangeRateService {
             rate = records.get(0);
         }
 
-        ExchangeRateDTO rateDTO = mapToDTO.mapToDto(rate);
-
-        return rateDTO;
+        return mapToDTO.mapToDto(rate);
     }
 
     public void remove(){
-
         exchangeRateRepository.deleteAll(exchangeRateRepository.findAll());
-
     }
 
     public boolean doesRecordExists(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
