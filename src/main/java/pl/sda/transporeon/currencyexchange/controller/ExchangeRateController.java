@@ -17,6 +17,7 @@ public class ExchangeRateController {
 
     private final ExchangeRateService exchangeRateService;
     private final ExchangeRateRepository repository;
+    public static final String gold = "gold";
 
     @Autowired
     public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository) {
@@ -44,7 +45,7 @@ public class ExchangeRateController {
     ResponseEntity<ExchangeRateDTO> createGoldUrl(
             @PathVariable String date) {
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView("gold", "PLN", date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, "PLN", date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 

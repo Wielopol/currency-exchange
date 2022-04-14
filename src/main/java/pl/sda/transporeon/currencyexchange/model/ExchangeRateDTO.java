@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +14,7 @@ public class ExchangeRateDTO {
     private String baseCurrency;
     private String targetCurrency;
     private double rate;
-    private Date exchangeDate;
+    private LocalDate exchangeDate;
 
 
 }
