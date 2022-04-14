@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import pl.sda.transporeon.currencyexchange.model.*;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.gold;
 
 @Service
@@ -25,20 +28,28 @@ public class ExchangeRateService {
 
     public ExchangeRateDTO getExchangeDataToView(String base, String target, String date) {
         ExchangeRate rate = null;
-        if(base.equals(gold)){
-            String request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
-            ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
-            if (rawRates != null) {
-                rate = mapper.mapGold(rawRates[0]);
+        boolean recordExists = doesRecordExists(base, target, mapper.stringDateToLocalDate(date));
+
+        if (!recordExists) {
+            if(base.equals(gold)){
+                String request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
+                ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
+                if (rawRates != null) {
+                    rate = mapper.mapGold(rawRates[0]);
+                }
+            }else {
+                String request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
+                ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
+                if (rawRate != null) {
+                    rate = mapper.mapCurrency(rawRate, target);
+                }
             }
-        }else {
-            String request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
-            ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
-            if (rawRate != null) {
-                rate = mapper.mapCurrency(rawRate, target);
-            }
+            exchangeRateRepository.save(rate);
+        } else {
+            List<ExchangeRate> records = findRecord(base, target, mapper.stringDateToLocalDate(date));
+            rate = records.get(0);
         }
-        exchangeRateRepository.save(rate);
+
         ExchangeRateDTO rateDTO = mapToDTO.mapToDto(rate);
 
         return rateDTO;
@@ -48,5 +59,13 @@ public class ExchangeRateService {
 
         exchangeRateRepository.deleteAll(exchangeRateRepository.findAll());
 
+    }
+
+    public boolean doesRecordExists(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
+        return exchangeRateRepository.existsByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
+    }
+
+    public List<ExchangeRate> findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
+        return exchangeRateRepository.findByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
     }
 }
