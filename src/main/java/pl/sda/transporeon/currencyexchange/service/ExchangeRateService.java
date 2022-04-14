@@ -1,5 +1,4 @@
 package pl.sda.transporeon.currencyexchange.service;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.sda.transporeon.currencyexchange.model.*;
@@ -25,16 +24,19 @@ public class ExchangeRateService {
 
 
     public ExchangeRateDTO getExchangeDataToView(String base, String target, String date) {
-        Object rawRate;
-        ExchangeRate rate;
+        ExchangeRate rate = null;
         if(base.equals(gold)){
             String request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
-            rawRate = getRate(request, ExchangeRateGoldApi.class);
-            rate = mapper.mapGold((ExchangeRateGoldApi) rawRate);
+            ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
+            if (rawRates != null) {
+                rate = mapper.mapGold(rawRates[0]);
+            }
         }else {
             String request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
-            rawRate = getRate(request, ExchangeRateCurrencyApi.class);
-            rate = mapper.mapCurrency((ExchangeRateCurrencyApi) rawRate, target);
+            ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
+            if (rawRate != null) {
+                rate = mapper.mapCurrency(rawRate, target);
+            }
         }
         exchangeRateRepository.save(rate);
         ExchangeRateDTO rateDTO = mapToDTO.mapToDto(rate);
@@ -46,9 +48,5 @@ public class ExchangeRateService {
 
         exchangeRateRepository.deleteAll(exchangeRateRepository.findAll());
 
-    }
-
-    public Object getRate(String request, Class exchangeRateClass) {
-        return restTemplate.restTemplate().getForObject(request, exchangeRateClass);
     }
 }

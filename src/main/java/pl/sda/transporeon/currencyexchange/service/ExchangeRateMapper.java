@@ -15,7 +15,7 @@ public class ExchangeRateMapper {
     }
 
     public ExchangeRate mapGold(ExchangeRateGoldApi rate) {
-        return new ExchangeRate(null, "PLN", "XAU", rate.getRate(), stringDateToLocalDate(rate.getDate()));
+        return new ExchangeRate(null, "XAU", "PLN", rate.getRate(), stringDateToLocalDate(rate.getDate()));
     }
 
     public LocalDate stringDateToLocalDate(String date) {
