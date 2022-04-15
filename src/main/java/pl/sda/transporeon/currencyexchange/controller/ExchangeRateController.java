@@ -38,7 +38,7 @@ public class ExchangeRateController {
             @PathVariable String target,
             @PathVariable String date) {
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base, target, date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 

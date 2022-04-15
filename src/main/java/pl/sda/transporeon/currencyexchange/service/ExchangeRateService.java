@@ -28,17 +28,18 @@ public class ExchangeRateService {
 
     public ExchangeRateDTO getExchangeDataToView(String base, String target, String date) {
         ExchangeRate rate = null;
+        String request;
         boolean recordExists = doesRecordExists(base, target, mapper.stringDateToLocalDate(date));
 
         if (!recordExists) {
             if(base.equals(gold)){
-                String request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
+                request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
                 ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
                 if (rawRates != null) {
                     rate = mapper.mapGold(rawRates[0]);
                 }
             } else {
-                String request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
+                request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
                 ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
                 if (rawRate != null) {
                     rate = mapper.mapCurrency(rawRate, target);
