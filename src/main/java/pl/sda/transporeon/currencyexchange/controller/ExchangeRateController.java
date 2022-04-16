@@ -17,6 +17,8 @@ public class ExchangeRateController {
 
     private final ExchangeRateService exchangeRateService;
     private final ExchangeRateRepository repository;
+    public static final String gold = "XAU";
+    public static final String pln = "PLN";
 
     @Autowired
     public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository) {
@@ -36,7 +38,7 @@ public class ExchangeRateController {
             @PathVariable String target,
             @PathVariable String date) {
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base, target, date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
@@ -44,7 +46,7 @@ public class ExchangeRateController {
     ResponseEntity<ExchangeRateDTO> createGoldUrl(
             @PathVariable String date) {
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView("gold", "PLN", date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class ExchangeRateNonPlnApi {
+public class ExchangeRateCurrencyApi {
     private String base;
     private String date;
     private Map<String,Double> rates;
