@@ -3,6 +3,7 @@ package pl.sda.transporeon.currencyexchange.service;
 import org.springframework.stereotype.Component;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
+import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticDTO;
 
 @Component
 public class MapToDTO {
@@ -17,4 +18,5 @@ public class MapToDTO {
 
         return rateDTO;
     }
+
 }

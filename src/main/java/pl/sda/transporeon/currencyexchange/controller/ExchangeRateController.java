@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
-import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
-import pl.sda.transporeon.currencyexchange.model.ExchangePost;
+import pl.sda.transporeon.currencyexchange.model.*;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
+import pl.sda.transporeon.currencyexchange.repository.ExchangeStatisticRepository;
 import pl.sda.transporeon.currencyexchange.service.ExchangeRateService;
+import pl.sda.transporeon.currencyexchange.service.ExchangeStatisticService;
 
 import java.net.URI;
 
@@ -17,17 +17,25 @@ public class ExchangeRateController {
 
     private final ExchangeRateService exchangeRateService;
     private final ExchangeRateRepository repository;
+    private final ExchangeStatisticRepository statisticRepository;
+
+    private final ExchangeStatisticService statisticService;
     public static final String gold = "XAU";
     public static final String pln = "PLN";
 
     @Autowired
-    public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository) {
+    public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository, ExchangeStatisticRepository statisticRepository, ExchangeStatisticService statisticService) {
         this.exchangeRateService = exchangeRateService;
         this.repository = repository;
+        this.statisticRepository = statisticRepository;
+        this.statisticService = statisticService;
     }
 
     @PostMapping("/exchange")
     ResponseEntity<ExchangeRateDTO> createRate(@RequestBody ExchangePost toCreate) {
+
+        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(), toCreate.getExchangeDate()));
+
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(), toCreate.getExchangeDate());
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
@@ -38,7 +46,19 @@ public class ExchangeRateController {
             @PathVariable String target,
             @PathVariable String date) {
 
+        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(base,target,date));
+
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
+
+    @GetMapping("/statistic/{base}/{target}/{date}")
+    ResponseEntity<ExchangeStatisticDTO> statisticValueUrl(
+            @PathVariable String base,
+            @PathVariable String target,
+            @PathVariable String date) {
+
+        ExchangeStatisticDTO result = statisticService.calculateStatistic(base, target, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
@@ -46,19 +66,33 @@ public class ExchangeRateController {
     ResponseEntity<ExchangeRateDTO> createGoldUrl(
             @PathVariable String date) {
 
+        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(pln,gold,date));
+
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
     @GetMapping("/exchange")
-    ResponseEntity<Iterable<ExchangeRate>> readAll() {
+    ResponseEntity<Iterable<ExchangeRate>> readAllExchangeRate() {
         return ResponseEntity.ok(repository.findAll());
+    }
+    @GetMapping("/statistic")
+    ResponseEntity<Iterable<ExchangeStatisticModel>> readAllStatistic() {
+        return ResponseEntity.ok(statisticRepository.findAll());
     }
 
 
     @DeleteMapping(value = "/exchange/remove")
     public ResponseEntity<?> deleteAll() {
         exchangeRateService.remove();
+
+        return ResponseEntity.noContent().build();
+
+    }
+    @DeleteMapping(value = "/statistic/remove")
+    public ResponseEntity<?> cleanStatisticBD() {
+
+        statisticService.cleanStatisticDb();
 
         return ResponseEntity.noContent().build();
 
