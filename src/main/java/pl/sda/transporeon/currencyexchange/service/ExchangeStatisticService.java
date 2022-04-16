@@ -22,11 +22,9 @@ public class ExchangeStatisticService {
 
 
     public ExchangeStatisticDTO calculateStatistic(String base, String target, String date) {
-        //pobiera dane z db
-        List<ExchangeStatisticModel> listStatistic = new ArrayList<>();
-        listStatistic.addAll((Collection<? extends ExchangeStatisticModel>) statisticRepository.findAll());
 
-        //filtrowanie po parametrach
+        List<ExchangeStatisticModel> listStatistic = new ArrayList<>((Collection<? extends ExchangeStatisticModel>) statisticRepository.findAll());
+
         int counter = 0;
 
         for (ExchangeStatisticModel statModel : listStatistic) {
@@ -34,9 +32,7 @@ public class ExchangeStatisticService {
                 counter++;
             }
         }
-        //zwracamy ilość
-        ExchangeStatisticDTO result = new ExchangeStatisticDTO(base, target, date, counter);
-        return result;
+        return new ExchangeStatisticDTO(base, target, date, counter);
 
     }
 

@@ -3,6 +3,7 @@ package pl.sda.transporeon.currencyexchange.service;
 import org.springframework.stereotype.Component;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateCurrencyApi;
+import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateGoldApi;
 
 import java.time.LocalDate;
@@ -24,4 +25,10 @@ public class ExchangeRateMapper {
     public LocalDate stringDateToLocalDate(String date) {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
+    public ExchangeRateDTO mapToDto(ExchangeRate exchangeRate){
+
+        return new ExchangeRateDTO(exchangeRate.getBaseCurrency(), exchangeRate.getTargetCurrency(), exchangeRate.getRate(), exchangeRate.getExchangeDate());
+    }
+
+
 }

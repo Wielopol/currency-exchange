@@ -14,14 +14,12 @@ import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateControl
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
-    private final MapToDTO mapToDTO;
     private final RestTemplateConfig restTemplate;
     private final ExchangeRateMapper mapper;
 
     @Autowired
-    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository, MapToDTO mapToDTO, RestTemplateConfig restTemplate, ExchangeRateMapper mapper) {
+    public ExchangeRateService(ExchangeRateRepository exchangeRateRepository,  RestTemplateConfig restTemplate, ExchangeRateMapper mapper) {
         this.exchangeRateRepository = exchangeRateRepository;
-        this.mapToDTO = mapToDTO;
         this.restTemplate = restTemplate;
         this.mapper = mapper;
     }
@@ -52,7 +50,7 @@ public class ExchangeRateService {
             rate = records.get(0);
         }
 
-        return mapToDTO.mapToDto(rate);
+        return mapper.mapToDto(rate);
     }
 
     public void remove(){

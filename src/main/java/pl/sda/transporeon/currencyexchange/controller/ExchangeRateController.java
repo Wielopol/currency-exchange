@@ -18,7 +18,6 @@ public class ExchangeRateController {
     private final ExchangeRateService exchangeRateService;
     private final ExchangeRateRepository repository;
     private final ExchangeStatisticRepository statisticRepository;
-
     private final ExchangeStatisticService statisticService;
     public static final String gold = "XAU";
     public static final String pln = "PLN";
@@ -52,15 +51,6 @@ public class ExchangeRateController {
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
-    @GetMapping("/statistic/{base}/{target}/{date}")
-    ResponseEntity<ExchangeStatisticDTO> statisticValueUrl(
-            @PathVariable String base,
-            @PathVariable String target,
-            @PathVariable String date) {
-
-        ExchangeStatisticDTO result = statisticService.calculateStatistic(base, target, date);
-        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
-    }
 
     @GetMapping("/exchange/gold/{date}")
     ResponseEntity<ExchangeRateDTO> createGoldUrl(
@@ -76,11 +66,6 @@ public class ExchangeRateController {
     ResponseEntity<Iterable<ExchangeRate>> readAllExchangeRate() {
         return ResponseEntity.ok(repository.findAll());
     }
-    @GetMapping("/statistic")
-    ResponseEntity<Iterable<ExchangeStatisticModel>> readAllStatistic() {
-        return ResponseEntity.ok(statisticRepository.findAll());
-    }
-
 
     @DeleteMapping(value = "/exchange/remove")
     public ResponseEntity<?> deleteAll() {
@@ -89,11 +74,28 @@ public class ExchangeRateController {
         return ResponseEntity.noContent().build();
 
     }
+
+    @GetMapping("/statistic/{base}/{target}/{date}")
+    ResponseEntity<ExchangeStatisticDTO> statisticValueUrl(
+            @PathVariable String base,
+            @PathVariable String target,
+            @PathVariable String date) {
+
+        ExchangeStatisticDTO result = statisticService.calculateStatistic(base, target, date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
+
+    @GetMapping("/statistic")
+    ResponseEntity<Iterable<ExchangeStatisticModel>> readAllStatistic() {
+        return ResponseEntity.ok(statisticRepository.findAll());
+    }
+
+
+
     @DeleteMapping(value = "/statistic/remove")
     public ResponseEntity<?> cleanStatisticBD() {
 
         statisticService.cleanStatisticDb();
-
         return ResponseEntity.noContent().build();
 
     }
