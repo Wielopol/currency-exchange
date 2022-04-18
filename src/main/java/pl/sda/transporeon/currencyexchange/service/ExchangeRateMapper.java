@@ -14,7 +14,7 @@ import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateControl
 
 @Component
 public class ExchangeRateMapper {
-    public ExchangeRate mapCurrency(ExchangeRateCurrencyApi rate, String target) {
+    public ExchangeRate mapCurrency(ExchangeRateCurrencyApi rate, String target) throws NullPointerException {
         return new ExchangeRate(null, rate.getBase(), target, rate.getRates().get(target), stringDateToLocalDate(rate.getDate()));
     }
 

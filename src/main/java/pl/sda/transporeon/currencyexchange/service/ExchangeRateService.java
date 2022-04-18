@@ -2,6 +2,8 @@ package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import pl.sda.transporeon.currencyexchange.controller.exception.RateProcessingException;
 import pl.sda.transporeon.currencyexchange.model.*;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 
@@ -30,24 +32,22 @@ public class ExchangeRateService {
         String request;
         boolean recordExists = doesRecordExists(base, target, mapper.stringDateToLocalDate(date));
 
-        if (!recordExists) {
-            if(base.equals(gold)){
-                request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
-                ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
-                if (rawRates != null) {
-                    rate = mapper.mapGold(rawRates[0]);
+        try {
+            if (!recordExists) {
+                if(base.equals(gold)){
+                    request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
+                    rate = mapper.mapGold(getGoldRate(request));
+                } else {
+                    request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
+                    rate = mapper.mapCurrency(getCurrencyRate(request), target);
                 }
+                exchangeRateRepository.save(rate);
             } else {
-                request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
-                ExchangeRateCurrencyApi rawRate = restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
-                if (rawRate != null) {
-                    rate = mapper.mapCurrency(rawRate, target);
-                }
+                List<ExchangeRate> records = findRecord(base, target, mapper.stringDateToLocalDate(date));
+                rate = records.get(0);
             }
-            exchangeRateRepository.save(rate);
-        } else {
-            List<ExchangeRate> records = findRecord(base, target, mapper.stringDateToLocalDate(date));
-            rate = records.get(0);
+        } catch (HttpClientErrorException | NullPointerException e) {
+            throw new RateProcessingException("Cannot get currency data");
         }
 
         return mapper.mapToDto(rate);
@@ -63,5 +63,17 @@ public class ExchangeRateService {
 
     public List<ExchangeRate> findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
         return exchangeRateRepository.findByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
+    }
+
+    public ExchangeRateGoldApi getGoldRate(String request) throws HttpClientErrorException {
+        ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
+        if (rawRates != null) {
+            return rawRates[0];
+        }
+        return new ExchangeRateGoldApi();
+    }
+
+    public ExchangeRateCurrencyApi getCurrencyRate(String request) throws HttpClientErrorException {
+        return restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
     }
 }
