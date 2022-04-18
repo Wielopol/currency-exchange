@@ -28,7 +28,7 @@ public class ExchangeRateService {
 
 
     public ExchangeRateDTO getExchangeDataToView(String base, String target, String date) {
-        ExchangeRate rate = null;
+        ExchangeRate rate;
         String request;
         boolean recordExists = doesRecordExists(base, target, mapper.stringDateToLocalDate(date));
 
