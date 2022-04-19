@@ -11,6 +11,7 @@ import pl.sda.transporeon.currencyexchange.service.ExchangeRateService;
 import pl.sda.transporeon.currencyexchange.service.ExchangeStatisticService;
 
 import java.net.URI;
+import java.time.LocalDate;
 
 @Controller
 public class ExchangeRateController {
@@ -33,30 +34,52 @@ public class ExchangeRateController {
     @PostMapping("/exchange")
     ResponseEntity<ExchangeRateDTO> createRate(@RequestBody ExchangePost toCreate) {
 
-        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(), toCreate.getExchangeDate()));
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(), toCreate.getExchangeDate()));
 
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(toCreate.getBaseCurrency(), toCreate.getTargetCurrency(), toCreate.getExchangeDate());
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
-    @GetMapping("/exchange/{base}/{target}/{date}")
-    ResponseEntity<ExchangeRateDTO> createRateUrl(
+
+    @GetMapping("/exchange/history/{base}/{target}/{date}")
+    ResponseEntity<ExchangeRateDTO> createHistoryRateUrl(
             @PathVariable String base,
             @PathVariable String target,
             @PathVariable String date) {
 
-        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(base,target,date));
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(base,target,date));
+
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
+    @GetMapping("/exchange/history/gold/{date}")
+    ResponseEntity<ExchangeRateDTO> createHistoryGoldUrl(
+            @PathVariable String date) {
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(pln,gold,date));
+
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
+        return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
+    }
+
+    @GetMapping("/exchange/latest/{base}/{target}")
+    ResponseEntity<ExchangeRateDTO> createTodayRateUrl(
+            @PathVariable String base,
+            @PathVariable String target) {
+
+        String date = String.valueOf(LocalDate.now());
+
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(base,target,date));
 
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
 
-    @GetMapping("/exchange/gold/{date}")
-    ResponseEntity<ExchangeRateDTO> createGoldUrl(
-            @PathVariable String date) {
-
-        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(pln,gold,date));
+    @GetMapping("/exchange/latest/gold")
+    ResponseEntity<ExchangeRateDTO> createTodayGoldUrl(
+            ) {
+        String date = String.valueOf(LocalDate.now());
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(pln,gold,date));
 
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
