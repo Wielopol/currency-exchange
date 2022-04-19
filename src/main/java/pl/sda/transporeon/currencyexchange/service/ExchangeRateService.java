@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import pl.sda.transporeon.currencyexchange.controller.exception.RateProcessingException;
 import pl.sda.transporeon.currencyexchange.model.*;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
@@ -17,7 +18,7 @@ import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateControl
 public class ExchangeRateService {
 
     private final ExchangeRateRepository exchangeRateRepository;
-    private final RestTemplateConfig restTemplate;
+    private final RestTemplate restTemplate;
     private final ExchangeRateMapper mapper;
     @Value("${apiGold.url}")
     private String apiGoldUrl;
@@ -27,7 +28,7 @@ public class ExchangeRateService {
     @Autowired
     public ExchangeRateService(ExchangeRateRepository exchangeRateRepository,  RestTemplateConfig restTemplate, ExchangeRateMapper mapper) {
         this.exchangeRateRepository = exchangeRateRepository;
-        this.restTemplate = restTemplate;
+        this.restTemplate = restTemplate.restTemplate();
         this.mapper = mapper;
     }
 
@@ -71,7 +72,7 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateGoldApi getGoldRate(String request) throws HttpClientErrorException {
-        ExchangeRateGoldApi[] rawRates = restTemplate.restTemplate().getForObject(request, ExchangeRateGoldApi[].class);
+        ExchangeRateGoldApi[] rawRates = restTemplate.getForObject(request, ExchangeRateGoldApi[].class);
         if (rawRates != null) {
             return rawRates[0];
         }
@@ -79,6 +80,6 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateCurrencyApi getCurrencyRate(String request) throws HttpClientErrorException {
-        return restTemplate.restTemplate().getForObject(request, ExchangeRateCurrencyApi.class);
+        return restTemplate.getForObject(request, ExchangeRateCurrencyApi.class);
     }
 }
