@@ -9,8 +9,8 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeRateGoldApi;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.gold;
-import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.pln;
+import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.GOLD_CODE;
+import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.PLN_CODE;
 
 @Component
 public class ExchangeRateMapper {
@@ -19,7 +19,7 @@ public class ExchangeRateMapper {
     }
 
     public ExchangeRate mapGold(ExchangeRateGoldApi rate) {
-        return new ExchangeRate(null, gold, pln, rate.getRate(), stringDateToLocalDate(rate.getDate()));
+        return new ExchangeRate(null, GOLD_CODE, PLN_CODE, rate.getRate(), stringDateToLocalDate(rate.getDate()));
     }
 
     public LocalDate stringDateToLocalDate(String date) {

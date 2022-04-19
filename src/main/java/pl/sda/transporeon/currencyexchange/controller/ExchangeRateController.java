@@ -19,8 +19,8 @@ public class ExchangeRateController {
     private final ExchangeRateRepository repository;
     private final ExchangeStatisticRepository statisticRepository;
     private final ExchangeStatisticService statisticService;
-    public static final String gold = "XAU";
-    public static final String pln = "PLN";
+    public static final String GOLD_CODE = "XAU";
+    public static final String PLN_CODE = "PLN";
 
     @Autowired
     public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository, ExchangeStatisticRepository statisticRepository, ExchangeStatisticService statisticService) {
@@ -56,9 +56,9 @@ public class ExchangeRateController {
     ResponseEntity<ExchangeRateDTO> createGoldUrl(
             @PathVariable String date) {
 
-        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(pln,gold,date));
+        statisticService.saveStatisticModelToBd(new ExchangeStatisticModel(PLN_CODE, GOLD_CODE,date));
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(GOLD_CODE, PLN_CODE, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 

@@ -1,6 +1,7 @@
 package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import pl.sda.transporeon.currencyexchange.controller.exception.RateProcessingException;
@@ -10,7 +11,7 @@ import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.gold;
+import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.GOLD_CODE;
 
 @Service
 public class ExchangeRateService {
@@ -18,6 +19,10 @@ public class ExchangeRateService {
     private final ExchangeRateRepository exchangeRateRepository;
     private final RestTemplateConfig restTemplate;
     private final ExchangeRateMapper mapper;
+    @Value("${apiGold.url}")
+    private String apiGoldUrl;
+    @Value("${apiCurrency.url}")
+    private String apiCurrencyUrl;
 
     @Autowired
     public ExchangeRateService(ExchangeRateRepository exchangeRateRepository,  RestTemplateConfig restTemplate, ExchangeRateMapper mapper) {
@@ -34,11 +39,11 @@ public class ExchangeRateService {
 
         try {
             if (!recordExists) {
-                if(base.equals(gold)){
-                    request = "http://api.nbp.pl/api/cenyzlota/" + date + "/";
+                if(base.equals(GOLD_CODE)){
+                    request = apiGoldUrl + date;
                     rate = mapper.mapGold(getGoldRate(request));
                 } else {
-                    request = "https://api.exchangerate.host/" + date + "?base=" + base + "&symbols=" + target;
+                    request = apiCurrencyUrl + date + "?base=" + base + "&symbols=" + target;
                     rate = mapper.mapCurrency(getCurrencyRate(request), target);
                 }
                 exchangeRateRepository.save(rate);
