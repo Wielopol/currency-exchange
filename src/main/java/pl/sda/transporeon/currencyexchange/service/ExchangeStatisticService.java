@@ -1,6 +1,7 @@
 package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticDTO;
 import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticModel;
@@ -43,6 +44,11 @@ public class ExchangeStatisticService {
     public void cleanStatisticDb() {
         statisticRepository.deleteAll(statisticRepository.findAll());
     }
+    public List<ExchangeStatisticModel> findAll(){
+    return statisticRepository.findAll();
+    }
+
+
 
 
 }

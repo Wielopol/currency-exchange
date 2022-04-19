@@ -17,17 +17,13 @@ import java.time.LocalDate;
 public class ExchangeRateController {
 
     private final ExchangeRateService exchangeRateService;
-    private final ExchangeRateRepository repository;
-    private final ExchangeStatisticRepository statisticRepository;
     private final ExchangeStatisticService statisticService;
     public static final String gold = "XAU";
     public static final String pln = "PLN";
 
     @Autowired
-    public ExchangeRateController(ExchangeRateService exchangeRateService, ExchangeRateRepository repository, ExchangeStatisticRepository statisticRepository, ExchangeStatisticService statisticService) {
+    public ExchangeRateController(ExchangeRateService exchangeRateService,  ExchangeStatisticService statisticService) {
         this.exchangeRateService = exchangeRateService;
-        this.repository = repository;
-        this.statisticRepository = statisticRepository;
         this.statisticService = statisticService;
     }
 
@@ -87,7 +83,7 @@ public class ExchangeRateController {
 
     @GetMapping("/exchange")
     ResponseEntity<Iterable<ExchangeRate>> readAllExchangeRate() {
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(exchangeRateService.findAll());
     }
 
     @DeleteMapping(value = "/exchange/remove")
@@ -110,7 +106,7 @@ public class ExchangeRateController {
 
     @GetMapping("/statistic")
     ResponseEntity<Iterable<ExchangeStatisticModel>> readAllStatistic() {
-        return ResponseEntity.ok(statisticRepository.findAll());
+        return ResponseEntity.ok(statisticService.findAll());
     }
 
 

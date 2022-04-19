@@ -1,6 +1,7 @@
 package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.sda.transporeon.currencyexchange.model.*;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
@@ -63,5 +64,9 @@ public class ExchangeRateService {
 
     public List<ExchangeRate> findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
         return exchangeRateRepository.findByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
+    }
+
+    public List<ExchangeRate> findAll(){
+       return (List<ExchangeRate>) exchangeRateRepository.findAll();
     }
 }
