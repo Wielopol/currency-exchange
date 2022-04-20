@@ -22,11 +22,10 @@ REST documentation:
 
 ```json
 {
-  "_id": "56beef73438e76d40500636e",
-  "voucherId": "undefined_kShnoftO",
-  "usages": 0,
-  "discount": 35,
-  "discountType": "PLN",
+  "baseCurrency": "PLN",
+  "targetCurrency": "USD",
+  "rate": 0.233507,
+  "exchangeDate": "2022-04-13",
 }
 ```
 ### GET - currency when we choose date
