@@ -25,4 +25,8 @@ public class ExchangeStatisticModel {
         this.targetCurrency = targetCurrency;
         this.exchangeDate = exchangeDate;
     }
+
+
+
+
 }

@@ -14,6 +14,6 @@ public class ExchangeStatisticDTO {
     private String baseCurrency;
     private String targetCurrency;
     private String exchangeDate;
-    private Integer count;
+    private int count;
 
 }

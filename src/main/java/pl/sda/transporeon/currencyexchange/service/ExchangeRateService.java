@@ -82,4 +82,8 @@ public class ExchangeRateService {
     public ExchangeRateCurrencyApi getCurrencyRate(String request) throws HttpClientErrorException {
         return restTemplate.getForObject(request, ExchangeRateCurrencyApi.class);
     }
+
+    public List<ExchangeRate> findAll(){
+       return (List<ExchangeRate>) exchangeRateRepository.findAll();
+    }
 }

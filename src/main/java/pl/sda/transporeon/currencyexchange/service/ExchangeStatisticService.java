@@ -1,19 +1,19 @@
 package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticDTO;
 import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticModel;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeStatisticRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ExchangeStatisticService {
 
     private final ExchangeStatisticRepository statisticRepository;
+
 
     @Autowired
     public ExchangeStatisticService(ExchangeStatisticRepository statisticRepository) {
@@ -36,7 +36,7 @@ public class ExchangeStatisticService {
 
     }
 
-    public void saveStatisticModelToBd(ExchangeStatisticModel statisticModel) {
+    public void saveStatisticModelToDb(ExchangeStatisticModel statisticModel) {
         statisticRepository.save(statisticModel);
 
     }
@@ -44,6 +44,11 @@ public class ExchangeStatisticService {
     public void cleanStatisticDb() {
         statisticRepository.deleteAll(statisticRepository.findAll());
     }
+    public List<ExchangeStatisticModel> findAll(){
+    return statisticRepository.findAll();
+    }
+
+
 
 
 }
