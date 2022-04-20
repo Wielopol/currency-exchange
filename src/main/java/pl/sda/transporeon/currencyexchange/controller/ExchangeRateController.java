@@ -51,9 +51,9 @@ public class ExchangeRateController {
     @GetMapping("/exchange/history/gold/{date}")
     ResponseEntity<ExchangeRateDTO> createHistoryGoldUrl(
             @PathVariable String date) {
-        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(pln,gold,date));
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(PLN_CODE,GOLD_CODE,date));
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(GOLD_CODE, PLN_CODE, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
@@ -75,9 +75,9 @@ public class ExchangeRateController {
     ResponseEntity<ExchangeRateDTO> createTodayGoldUrl(
             ) {
         String date = String.valueOf(LocalDate.now());
-        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(pln,gold,date));
+        statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(PLN_CODE,GOLD_CODE,date));
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(gold, pln, date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(GOLD_CODE, PLN_CODE, date);
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
