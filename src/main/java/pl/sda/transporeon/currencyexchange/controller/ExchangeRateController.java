@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.transporeon.currencyexchange.model.*;
-import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
-import pl.sda.transporeon.currencyexchange.repository.ExchangeStatisticRepository;
 import pl.sda.transporeon.currencyexchange.service.ExchangeRateService;
 import pl.sda.transporeon.currencyexchange.service.ExchangeStatisticService;
 
@@ -81,7 +79,7 @@ public class ExchangeRateController {
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
-    @GetMapping("/exchange")
+    @GetMapping("/exchange/all/currency")
     ResponseEntity<Iterable<ExchangeRate>> readAllExchangeRate() {
         return ResponseEntity.ok(exchangeRateService.findAll());
     }
@@ -104,7 +102,7 @@ public class ExchangeRateController {
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
-    @GetMapping("/statistic")
+    @GetMapping("/statistic/all/queries")
     ResponseEntity<Iterable<ExchangeStatisticModel>> readAllStatistic() {
         return ResponseEntity.ok(statisticService.findAll());
     }
