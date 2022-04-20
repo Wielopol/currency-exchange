@@ -1,6 +1,7 @@
 package pl.sda.transporeon.currencyexchange.service;
 
 import org.springframework.stereotype.Component;
+import pl.sda.transporeon.currencyexchange.controller.exception.RateProcessingException;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateCurrencyApi;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
@@ -14,7 +15,10 @@ import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateControl
 
 @Component
 public class ExchangeRateMapper {
-    public ExchangeRate mapCurrency(ExchangeRateCurrencyApi rate, String target) throws NullPointerException {
+    public ExchangeRate mapCurrency(ExchangeRateCurrencyApi rate, String base, String target) {
+        if (rate.getRates().get(target) == null || !rate.getBase().equals(base)) {
+            throw new RateProcessingException("Cannot get currency data");
+        }
         return new ExchangeRate(null, rate.getBase(), target, rate.getRates().get(target), stringDateToLocalDate(rate.getDate()));
     }
 

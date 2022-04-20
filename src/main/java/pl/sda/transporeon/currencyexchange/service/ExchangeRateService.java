@@ -45,14 +45,14 @@ public class ExchangeRateService {
                     rate = mapper.mapGold(getGoldRate(request));
                 } else {
                     request = apiCurrencyUrl + date + "?base=" + base + "&symbols=" + target;
-                    rate = mapper.mapCurrency(getCurrencyRate(request), target);
+                    rate = mapper.mapCurrency(getCurrencyRate(request), base, target);
                 }
                 exchangeRateRepository.save(rate);
             } else {
                 List<ExchangeRate> records = findRecord(base, target, mapper.stringDateToLocalDate(date));
                 rate = records.get(0);
             }
-        } catch (HttpClientErrorException | NullPointerException e) {
+        } catch (HttpClientErrorException e) {
             throw new RateProcessingException("Cannot get currency data");
         }
 
