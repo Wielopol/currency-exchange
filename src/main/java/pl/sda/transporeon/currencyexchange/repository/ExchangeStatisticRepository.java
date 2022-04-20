@@ -6,6 +6,4 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticModel;
 
 @Repository
 public interface ExchangeStatisticRepository extends JpaRepository<ExchangeStatisticModel, Integer> {
-
-
 }
