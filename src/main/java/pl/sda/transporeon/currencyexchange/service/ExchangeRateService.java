@@ -47,8 +47,6 @@ public class ExchangeRateService {
                     rate = mapper.mapCurrency(getCurrencyRate(request), base, target);
                 }
                 exchangeRateRepository.save(rate);
-            } else {
-                rate = findRecord(base, target, mapper.stringDateToLocalDate(date));
             }
         } catch (HttpClientErrorException e) {
             throw new RateProcessingException("Cannot get currency data");
