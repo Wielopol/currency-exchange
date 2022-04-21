@@ -10,6 +10,7 @@ import pl.sda.transporeon.currencyexchange.service.ExchangeStatisticService;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Controller
 public class ExchangeRateController {
@@ -60,7 +61,8 @@ public class ExchangeRateController {
             @PathVariable String base,
             @PathVariable String target) {
 
-        String date = String.valueOf(LocalDate.now());
+        String date = String.valueOf(LocalDate.now(ZoneId.of("GMT")));
+        System.out.println(date);
 
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(base,target,date));
 
@@ -72,7 +74,7 @@ public class ExchangeRateController {
     @GetMapping("/exchange/latest/gold")
     ResponseEntity<ExchangeRateDTO> createTodayGoldUrl(
             ) {
-        String date = String.valueOf(LocalDate.now());
+        String date = String.valueOf(LocalDate.now(ZoneId.of("GMT")));
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(PLN_CODE,GOLD_CODE,date));
 
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(GOLD_CODE, PLN_CODE, date);
