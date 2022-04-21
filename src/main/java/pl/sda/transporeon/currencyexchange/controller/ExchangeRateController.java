@@ -62,7 +62,6 @@ public class ExchangeRateController {
             @PathVariable String target) {
 
         String date = String.valueOf(LocalDate.now(ZoneId.of("GMT")));
-        System.out.println(date);
 
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(base,target,date));
 
@@ -72,8 +71,7 @@ public class ExchangeRateController {
 
 
     @GetMapping("/exchange/latest/gold")
-    ResponseEntity<ExchangeRateDTO> createTodayGoldUrl(
-            ) {
+    ResponseEntity<ExchangeRateDTO> createTodayGoldUrl() {
         String date = String.valueOf(LocalDate.now(ZoneId.of("GMT")));
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(PLN_CODE,GOLD_CODE,date));
 
