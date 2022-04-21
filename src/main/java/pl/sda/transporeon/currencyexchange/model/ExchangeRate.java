@@ -14,9 +14,8 @@ import java.time.LocalDate;
 @Table(name = "rate")
 public class ExchangeRate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rates_generator")
-//    @SequenceGenerator(name = "rates_generator", sequenceName = "rates_rate_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rates_generator")
+    @SequenceGenerator(name = "rates_generator", sequenceName = "rates_rate_id_seq", allocationSize = 1)
     private Integer id;
     private String baseCurrency;
     private String targetCurrency;

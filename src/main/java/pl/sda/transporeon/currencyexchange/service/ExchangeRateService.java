@@ -49,8 +49,7 @@ public class ExchangeRateService {
                 }
                 exchangeRateRepository.save(rate);
             } else {
-                List<ExchangeRate> records = findRecord(base, target, mapper.stringDateToLocalDate(date));
-                rate = records.get(0);
+                rate = findRecord(base, target, mapper.stringDateToLocalDate(date));
             }
         } catch (HttpClientErrorException e) {
             throw new RateProcessingException("Cannot get currency data");
@@ -67,8 +66,8 @@ public class ExchangeRateService {
         return exchangeRateRepository.existsByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
     }
 
-    public List<ExchangeRate> findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
-        return exchangeRateRepository.findByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
+    public ExchangeRate findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
+        return exchangeRateRepository.findDistinctByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
     }
 
     public ExchangeRateGoldApi getGoldRate(String request) throws HttpClientErrorException {
