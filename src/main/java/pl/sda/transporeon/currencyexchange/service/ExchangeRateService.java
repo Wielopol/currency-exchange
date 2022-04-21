@@ -34,12 +34,11 @@ public class ExchangeRateService {
 
 
     public ExchangeRateDTO getExchangeDataToView(String base, String target, String date) {
-        ExchangeRate rate;
+        ExchangeRate rate = findRecord(base, target, mapper.stringDateToLocalDate(date));
         String request;
-        boolean recordExists = doesRecordExists(base, target, mapper.stringDateToLocalDate(date));
 
         try {
-            if (!recordExists) {
+            if (rate == null) {
                 if(base.equals(GOLD_CODE)){
                     request = apiGoldUrl + date;
                     rate = mapper.mapGold(getGoldRate(request));
@@ -60,10 +59,6 @@ public class ExchangeRateService {
 
     public void remove(){
         exchangeRateRepository.deleteAll(exchangeRateRepository.findAll());
-    }
-
-    public boolean doesRecordExists(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
-        return exchangeRateRepository.existsByBaseCurrencyAndTargetCurrencyAndExchangeDate(baseCurrency, targetCurrency, exchangeDate);
     }
 
     public ExchangeRate findRecord(String baseCurrency, String targetCurrency, LocalDate exchangeDate) {
