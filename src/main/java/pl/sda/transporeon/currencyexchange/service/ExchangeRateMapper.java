@@ -8,6 +8,7 @@ import pl.sda.transporeon.currencyexchange.model.ExchangeRateDTO;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRateGoldApi;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static pl.sda.transporeon.currencyexchange.controller.ExchangeRateController.GOLD_CODE;
@@ -27,6 +28,9 @@ public class ExchangeRateMapper {
     }
 
     public LocalDate stringDateToLocalDate(String date) {
+        if (date.equals("latest")) {
+            return LocalDate.now(ZoneId.of("GMT"));
+        }
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
     public ExchangeRateDTO mapToDto(ExchangeRate exchangeRate){

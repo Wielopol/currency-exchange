@@ -65,14 +65,14 @@ public class ExchangeRateController {
 
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(base,target,date));
 
-        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), date);
+        ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(base.toUpperCase(), target.toUpperCase(), "latest");
         return ResponseEntity.created(URI.create("/" + result.getBaseCurrency())).body(result);
     }
 
 
     @GetMapping("/exchange/latest/gold")
     ResponseEntity<ExchangeRateDTO> createTodayGoldUrl() {
-        String date = String.valueOf(LocalDate.now(ZoneId.of("GMT")));
+        String date = String.valueOf(LocalDate.now());
         statisticService.saveStatisticModelToDb(new ExchangeStatisticModel(PLN_CODE,GOLD_CODE,date));
 
         ExchangeRateDTO result = exchangeRateService.getExchangeDataToView(GOLD_CODE, PLN_CODE, date);
