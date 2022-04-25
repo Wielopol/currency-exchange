@@ -4,21 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
+import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticModel;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
+import pl.sda.transporeon.currencyexchange.repository.ExchangeStatisticRepository;
 
 import java.time.LocalDate;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +29,9 @@ class ExchangeRateControllerIntegrationTest {
 
     @Autowired
     private ExchangeRateRepository repository;
+
+    @Autowired
+    private ExchangeStatisticRepository statisticRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -75,6 +75,29 @@ class ExchangeRateControllerIntegrationTest {
                 .andExpect(status().isCreated());
 
     }
+    @Test
+    void http_getExchangeFromLatest() throws Exception {
+
+        String base =
+                new ExchangeRate(15,"PLN", "USD", 55.5,LocalDate.now()).getBaseCurrency();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/exchange/latest/"+base+"/GBP/"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    void http_getExchangeGoldFromToDay() throws Exception {
+
+                new ExchangeRate(15,"PLN", "XAU", 55.5,LocalDate.now());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/exchange/latest/gold"))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
+    }
+
+
+
 
 
 

@@ -6,7 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import pl.sda.transporeon.currencyexchange.model.ExchangeRate;
+import pl.sda.transporeon.currencyexchange.model.ExchangeStatisticModel;
 import pl.sda.transporeon.currencyexchange.repository.ExchangeRateRepository;
+import pl.sda.transporeon.currencyexchange.repository.ExchangeStatisticRepository;
 
 import java.time.LocalDate;
 
@@ -23,6 +25,9 @@ class ExchangeRateControllerE2ETest {
     @Autowired
     ExchangeRateRepository repository;
 
+    @Autowired
+    ExchangeStatisticRepository statisticRepository;
+
 
     @Test
     void httpGet_returnAllExchangeRateTest(){
@@ -35,5 +40,22 @@ class ExchangeRateControllerE2ETest {
                 .getForObject("http://localhost:" + port + "/exchange/all/currency", ExchangeRate[].class);
         //then
         assertThat(result).hasSize(2);
+        //and
+
     }
+
+    @Test
+    void httpGet_returnAllExchangeStatisticTest(){
+        // given
+        statisticRepository.save(new ExchangeStatisticModel(16,"USA","GBP", String.valueOf(LocalDate.now())));
+        statisticRepository.save(new ExchangeStatisticModel(17,"PLN", "USA", String.valueOf(LocalDate.now())));
+
+        //when
+        ExchangeStatisticModel[] result = restTemplate
+                .getForObject("http://localhost:" + port + "/statistic/all/queries", ExchangeStatisticModel[].class);
+        //then
+        assertThat(result).hasSize(2);
+    }
+
+
 }
