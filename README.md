@@ -1,9 +1,9 @@
-# Currency-exchange
+# Currency exchange
 
 REST documentation:
 
 
-## Get the currency rate and gold
+## Get the currency rate and gold price
  ### POST
 `POST` `/exchange`
 
@@ -11,14 +11,12 @@ REST documentation:
 
 ```json
 {
-      
-       "baseCurrency": "PLN",
-       "targetCurrency": "USD",
-       "exchangeDate": "2022-04-13"
-   }
-
+  "baseCurrency": "PLN",
+  "targetCurrency": "USD",
+  "exchangeDate": "2022-04-13"
+}
 ```
-##### Response
+#### Response
 
 ```json
 {
@@ -28,15 +26,15 @@ REST documentation:
   "exchangeDate": "2022-04-13",
 }
 ```
-### GET - currency when we choose date
+### GET - historical currency exchange rate with choosing date
 
 `GET` `/exchange/history/{base}/{target}/{date}`
 
 ### Parameters
 
 ##### base - base currency
-##### target- target currency
-##### date- checking course data
+##### target - target currency
+##### date - date of checked exchange rate
 
 
 #### Example
@@ -51,17 +49,16 @@ REST documentation:
   "targetCurrency": "USD",
   "rate": 0.233507,
   "exchangeDate": "2022-04-17"
-
 }
 
 ```
-### GET - gold when we choose date
+### GET - historical gold price with choosing date
 
 `GET` `/exchange/history/gold/{date}`
 
 ### Parameters
 
-##### date- checking course data
+##### date - date of checked price
 
 
 #### Example
@@ -76,7 +73,6 @@ REST documentation:
   "targetCurrency": "USD",
   "rate": 0.233507,
   "exchangeDate": "2022-04-17"
-
 }
 
 ```
@@ -88,7 +84,7 @@ REST documentation:
 ### Parameters
 
 ##### base - base currency
-##### target- target currency
+##### target - target currency
 
 
 
@@ -104,7 +100,6 @@ REST documentation:
   "targetCurrency": "USD",
   "rate": 0.233507,
   "exchangeDate": "2022-04-17"
-
 }
 
 ```
@@ -128,11 +123,10 @@ REST documentation:
   "targetCurrency": "PLN",
   "rate": 270.56,
   "exchangeDate": "2022-04-19"
-
 }
 
 ```
-## Get statistic about currency rate and gold
+## Get statistics about currency rate and gold price
 
 ### GET 
 `GET` `/statistic/{base}/{target}/{date}`
@@ -154,11 +148,9 @@ REST documentation:
 ```
 
 
-
-
 ## Get data from DB
 
-### GET - all currency rate and gold from DB
+### GET - all currency rates and gold prices from DB
 `GET` `/exchange/all/currency`
 
 
@@ -217,10 +209,10 @@ REST documentation:
 
 ## Clean DB
 
-### Clean DB with currency 
+### Clean DB with currencies 
 
 `DELETE` `/exchange/remove`
 
-### Remove all statistic record from DB
+### Remove all statistics records from DB
 
 `DELETE` `/statistic/remove`
