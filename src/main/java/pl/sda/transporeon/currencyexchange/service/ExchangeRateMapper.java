@@ -34,7 +34,6 @@ public class ExchangeRateMapper {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
     public ExchangeRateDTO mapToDto(ExchangeRate exchangeRate){
-
         return new ExchangeRateDTO(exchangeRate.getBaseCurrency(), exchangeRate.getTargetCurrency(), exchangeRate.getRate(), exchangeRate.getExchangeDate());
     }
 
