@@ -23,7 +23,7 @@ REST documentation:
   "baseCurrency": "PLN",
   "targetCurrency": "USD",
   "rate": 0.233507,
-  "exchangeDate": "2022-04-13",
+  "exchangeDate": "2022-04-13"
 }
 ```
 ### GET - historical currency exchange rate with choosing date
